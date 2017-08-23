@@ -30,7 +30,7 @@ public class ResultController {
 
     @FXML
     private void initialize(){
-        //searchDirField.setText("H:\\testDir");
+        searchDirField.setText("H:\\testDir");
         //choiceBoxButton.setValue(".log");
     }
 

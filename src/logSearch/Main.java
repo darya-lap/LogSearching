@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import logSearch.model.FileDirectory;
+import logSearch.view.ResultController;
 
 import java.io.IOException;
 
@@ -40,8 +41,8 @@ public class Main extends Application {
             primaryStage.show();
 
             FileDirectory fd = new FileDirectory("H:\\testDir");
-           // ResultController resultController = loader.getController();
-           // resultController.setMainApp(this);
+            ResultController resultController = loader.getController();
+            resultController.setMainApp(this);
 
         } catch (IOException e) {
             e.printStackTrace();
