@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="750.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #696969;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="750.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #696969;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logSearch.view.ResultController">
    <children>
-      <SplitPane dividerPositions="0.18090452261306533" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.15829145728643215" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane maxHeight="60.0" minHeight="60.0" minWidth="500.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -25,10 +24,10 @@
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
                                     <Label text="Папка для поиска" />
-                                    <TextField minWidth="150.0" prefHeight="25.0" prefWidth="178.0" text="C:\" />
+                                    <TextField fx:id="searchDirField" minWidth="150.0" prefHeight="25.0" prefWidth="178.0" />
                                  </children>
                               </VBox>
-                              <Button mnemonicParsing="false" text="Изменить...">
+                              <Button fx:id="changeDirButton" mnemonicParsing="false" text="Изменить...">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
@@ -43,10 +42,10 @@
                               <VBox prefHeight="42.0" prefWidth="244.0">
                                  <children>
                                     <Label text="Текст поиска:" />
-                                    <TextField prefHeight="25.0" prefWidth="226.0" />
+                                    <TextField fx:id="searchTextField" prefHeight="25.0" prefWidth="226.0" />
                                  </children>
                               </VBox>
-                              <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Поиск">
+                              <Button fx:id="searchButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Поиск">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
@@ -61,7 +60,7 @@
                               <VBox prefHeight="42.0" prefWidth="157.0">
                                  <children>
                                     <Label text="Расширение файлов:" />
-                                    <ChoiceBox id="exctentionChoiceBox" prefHeight="25.0" prefWidth="50.0">
+                                    <ChoiceBox id="exctentionChoiceBox" fx:id="choiceBoxButton" prefHeight="25.0" prefWidth="50.0">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>

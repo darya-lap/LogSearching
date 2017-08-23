@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import logSearch.model.FileDirectory;
 
 import java.io.IOException;
 
@@ -12,6 +13,7 @@ public class Main extends Application {
 
     private Stage primaryStage;
     private AnchorPane rootLayout;
+    private int resultCounter = 1;
 
     @Override
     public void start(Stage primaryStage) {
@@ -19,6 +21,7 @@ public class Main extends Application {
         this.primaryStage.setTitle("LogSearching");
 
         initRootLayout();
+        initResultTab();
     }
 
     /**
@@ -35,11 +38,30 @@ public class Main extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
+
+            FileDirectory fd = new FileDirectory("H:\\testDir");
+           // ResultController resultController = loader.getController();
+           // resultController.setMainApp(this);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void initResultTab() {
+        try {
+            // Загружаем сведения об адресатах.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("view/result.fxml"));
+            AnchorPane personOverview = (AnchorPane) loader.load();
+
+            // Помещаем сведения об адресатах в центр корневого макета.
+//            TabPane tp = (TabPane) scene.lookup("#history");
+//            rootLayout.setCenter(personOverview);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Возвращает главную сцену.
