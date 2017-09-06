@@ -16,8 +16,12 @@ import logSearch.model.FileDirectory;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResultController {
+    private Map<String, FileDirectory> map;
+
     @FXML
     private Button changeDirButton;
 
@@ -55,7 +59,12 @@ public class ResultController {
 
         choiceBox.setItems(FXCollections.observableArrayList(".log",".txt"));
         choiceBox.getSelectionModel().selectFirst();
+
+        map = new HashMap<>();
+
     }
+
+
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
@@ -65,67 +74,67 @@ public class ResultController {
 
     public void createTab(){
 
-        if (searchDirField.getText() == ""){
-            System.out.println("No such directory");
+        if (searchDirField.getText().equals("")){
+            setAlert("Укажите папку для поиска!");
         }
         else {
-            FileDirectory fd = new FileDirectory(searchDirField.getText(), choiceBox.getValue().toString());
-            if (!fd.isExist()){
-                setAlert("Не существует указанного пути");
+            if (searchTextField.getText().equals("")){
+                setAlert("Укажите текст поиска");
             }
             else {
-                if (searchText(fd)) {
-                    //            ResultThread thread = new ResultThread(fd, text, tabPane);
-                    //            thread.start();
-                    Tab tab = new Tab();
-                    tab.setText("tab " + counter);
-                    counter++;
+                FileDirectory fd = new FileDirectory(searchDirField.getText(), choiceBox.getValue().toString(), searchTextField.getText());
+                if (!fd.isExist()) {
+                    setAlert("Не существует указанного пути");
+                } else {
+                    if (searchText(fd)) {
+                        //            ResultThread thread = new ResultThread(fd, text, tabPane);
+                        //            thread.start();
+                        Tab tab = new Tab();
+                        tab.setText("tab " + counter);
+                        counter++;
 
-                    SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
-                    selectionModel.select(tab); //select by object
+                        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+                        selectionModel.select(tab); //select by object
 
-                    SplitPane sp = new SplitPane();
-                    AnchorPane ap1 = new AnchorPane();
-                    AnchorPane ap2 = new AnchorPane();
-                    TreeView tw = new TreeView();
-                    VBox vb = new VBox();
-                    ButtonBar bb = new ButtonBar();
-                    Button b1 = new Button();
-                    Button b2 = new Button();
-                    Button b3 = new Button();
-                    Label l = new Label();
-                    Pane p = new Pane();
+                        SplitPane sp = new SplitPane();
+                        AnchorPane ap1 = new AnchorPane();
+                        AnchorPane ap2 = new AnchorPane();
+                        TreeView tw = new TreeView(setTreeView(fd));
+                        VBox vb = new VBox();
+                        ButtonBar bb = new ButtonBar();
+                        Button b1 = new Button();
+                        Button b2 = new Button();
+                        Button b3 = new Button();
+                        Label l = new Label();
+                        Pane p = new Pane();
 
-                    b1.setText("<-");
-                    b2.setText("->");
-                    b3.setText("all");
+                        b1.setText("<-");
+                        b2.setText("->");
+                        b3.setText("all");
 
-                    tw.prefWidthProperty().bind(ap1.widthProperty());
-                    tw.prefHeightProperty().bind(ap1.heightProperty());
-                    VBox.setMargin(bb, new Insets(10, 10, 10, ap2.getWidth()));
+                        ap1.setMaxWidth(250);
+                        tw.setMaxWidth(250);
+                        tw.prefWidthProperty().bind(ap1.widthProperty());
+                        tw.prefHeightProperty().bind(ap1.heightProperty());
+                        VBox.setMargin(bb, new Insets(10, 10, 10, ap2.getWidth()));
 
-                    Node folderIcon = new ImageView(
-                            new Image(getClass().getResourceAsStream("folder_16.png"))
-                    );
+                        tw.setOnMouseClicked(e -> {
+                            TreeItem<String> selected = (TreeItem<String>)tw.getSelectionModel().getSelectedItem();
+                            if (selected.getValue().contains(".log")){
+                                //l.setText();
+                            }
+                        });
 
-                    TreeItem<String> rootItem = new TreeItem<String> ("Inbox",folderIcon);
-                    rootItem.setExpanded(true);
-                    for (int i = 1; i < 6; i++) {
-                        TreeItem<String> item = new TreeItem<String> ("Message" + i);
-                        rootItem.getChildren().add(item);
+                        bb.getButtons().setAll(b1, b2, b3);
+                        vb.getChildren().setAll(bb, l, p);
+                        ap1.getChildren().setAll(tw);
+                        ap2.getChildren().setAll(vb);
+                        sp.getItems().setAll(ap1, ap2);
+
+                        tab.setContent(sp);
+
+                        tabPane.getTabs().add(tab);
                     }
-                    tw = new TreeView<String> (rootItem);
-
-                    bb.getButtons().setAll(b1, b2, b3);
-                    vb.getChildren().setAll(bb, l, p);
-                    ap1.getChildren().setAll(tw);
-                    ap2.getChildren().setAll(vb);
-                    sp.getItems().setAll(ap1, ap2);
-
-                    tab.setContent(sp);
-
-                    //tab.setContent(new Rectangle(200,200, Color.LIGHTSTEELBLUE));
-                    tabPane.getTabs().add(tab);
                 }
             }
         }
@@ -144,7 +153,7 @@ public class ResultController {
     public boolean searchText(FileDirectory fd){
         System.out.println(fd);
         if (fd.getFiles().size() == 0){
-            setAlert("В данной папке нет файлов с подходящим расширением");
+            setAlert("В данной папке ничего не найдено :(");
             return false;
         }
         else{
@@ -152,13 +161,37 @@ public class ResultController {
         }
     }
 
-    public void setAlert(String text){
+    public static void setAlert(String text){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         alert.setTitle("Ошибка");
         alert.setHeaderText(null);
-        alert.setContentText(text);
+//        alert.setContentText(text);
 
         alert.showAndWait();
+    }
+
+    private TreeItem setTreeView (FileDirectory fd){
+
+        Node folderIcon = new ImageView(
+                new Image(getClass().getResourceAsStream("/folderIcon.png"))
+        );
+
+
+        TreeItem<String> rootItem = new TreeItem<> (fd.getName(), folderIcon);
+        rootItem.setExpanded(true);
+        for (FileDirectory dir: fd.getFolders()){
+            TreeItem<String> item = setTreeView(dir);
+            rootItem.getChildren().add(item);
+        }
+        for (File file: fd.getFiles()) {
+            Node folderIcon1 = new ImageView(
+                    new Image(getClass().getResourceAsStream("/textIcon.png"))
+            );
+            TreeItem<String> item = new TreeItem<>(file.getName(), folderIcon1);
+
+            rootItem.getChildren().add(item);
+        }
+        return rootItem;
     }
 }
